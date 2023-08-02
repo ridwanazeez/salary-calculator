@@ -1,35 +1,14 @@
-# salary-calculator
+# Salary Calculator
 
-This template should help get you started developing with Vue 3 in Vite.
+See more tools at [ridwanazeez.github.io](https://ridwanazeez.github.io)
 
-## Recommended IDE Setup
+## 🛠 Built With
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+⚡ [VueJS v3](https://vuejs.org/) \
+⚡ [TailwindCSS](https://tailwindcss.com/) \
+⚡ [Heroicons (included with Vue)](https://heroicons.com/) \
+⚡ [VueUse](https://vueuse.org/)
 
-## Customize configuration
+---
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+Made with ♥ from Georgetown, Guyana ✈
