@@ -1,11 +1,11 @@
 <template>
   <div class="flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-    <div class="">
+    <div>
       <div
         class="mx-auto w-auto rounded-t-xl bg-cover bg-center [height:250px]"
-        style="background-image: url(/screaming.webp)"
+        style="background-image: url(/images/screaming.webp)"
         role="img"
-        aria-label="Image of an empty wallet"
+        aria-label="Drawing of a person screaming and pulling their hair out"
       ></div>
       <div class="px-10 py-10">
         <form class="w-full max-w-md space-y-8" @submit.prevent="checkForm">
@@ -14,7 +14,7 @@
               Salary Calculator
             </h2>
             <p class="text-center text-sm dark:text-white">
-              v{{ version }} | Last updated: 01/08/2023 | Click
+              v{{ version }} | Last updated: 02/08/2023 | Click
               <a
                 href="https://ridwanazeez.notion.site/Salary-Calculator-Update-Notes-ad551e6f8c18465e8fed5517616b0184?pvs=4"
                 class="underline"
@@ -46,30 +46,51 @@
             </div>
           </div>
           <div class="space-y-6">
-            <div class="col-span-6 sm:col-span-3">
-              <label
-                for="basicSalary"
-                class="block text-sm font-medium text-gray-700 dark:text-white"
-              >
-                Basic Salary
-              </label>
-              <div class="relative">
-                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <span class="text-gray-500 sm:text-sm">$</span>
+            <div class="grid grid-cols-6 gap-6">
+              <div class="col-span-6 sm:col-span-3">
+                <label
+                  for="basicSalary"
+                  class="block text-sm font-medium text-gray-700 dark:text-white"
+                >
+                  Basic Salary
+                </label>
+                <div class="relative">
+                  <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <span class="text-gray-500 sm:text-sm">$</span>
+                  </div>
+                  <input
+                    id="basicSalary"
+                    v-model="basicSalary"
+                    type="number"
+                    name="basicSalary"
+                    placeholder="100000"
+                    class="mt-1 block w-full rounded-md border-gray-300 pl-7 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                  />
                 </div>
-                <input
-                  id="basicSalary"
-                  v-model="basicSalary"
-                  type="number"
-                  name="basicSalary"
-                  placeholder="100000"
-                  class="mt-1 block w-full rounded-md border-gray-300 pl-7 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                />
+              </div>
+              <div class="col-span-6 sm:col-span-3">
+                <label
+                  for="companyType"
+                  class="block text-sm font-medium text-gray-700 dark:text-white"
+                >
+                  Company Type
+                </label>
+                <select
+                  id="companyType"
+                  v-model="form.companyType"
+                  name="companyType"
+                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                >
+                  <option value="" disabled selected>Choose Company Type</option>
+                  <option value="Private">Private</option>
+                  <option value="Public">Public</option>
+                  <option value="NGO">NGO</option>
+                </select>
               </div>
             </div>
             <div
               class="grid grid-cols-6 items-end gap-6"
-              v-for="(allowance, i) in allowances"
+              v-for="(allowance, i) in form.allowances"
               :key="i"
             >
               <div class="col-span-2 sm:col-span-2">
@@ -107,15 +128,22 @@
                   class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
                 >
                   <option value="" disabled selected>Choose Allowance Type</option>
+                  <option value="Duty">Duty</option>
+                  <option value="Entertainment">Entertainment</option>
+                  <option value="Gratuity">Gratuity</option>
                   <option value="Housing">Housing</option>
-                  <option value="Communication">Communication</option>
+                  <option value="Meal">Meal</option>
+                  <option value="Medical/Dental">Medical/Dental</option>
+                  <option value="Telephone">Telephone</option>
                   <option value="Transportation">Transportation</option>
+                  <option value="Uniform">Uniform</option>
+                  <option value="Vacation">Vacation</option>
                 </select>
               </div>
               <div class="col-span-1 sm:col-span-1">
                 <button
                   type="button"
-                  class="flex w-full justify-center rounded-md border border-transparent bg-green-100 px-2 py-2 font-medium text-green-700 hover:bg-green-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 dark:bg-green-500 dark:text-white dark:hover:bg-green-700"
+                  class="flex w-full justify-center rounded-md border border-transparent bg-green-500 px-2 py-2 font-medium text-green-700 hover:bg-green-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 dark:bg-green-500 dark:text-white dark:hover:bg-green-700"
                   @click="addAllowance()"
                 >
                   <PlusSmallIcon class="h-6 w-6 text-white" />
@@ -124,13 +152,17 @@
               <div class="col-span-1 sm:col-span-1">
                 <button
                   type="button"
-                  class="flex w-full justify-center rounded-md border border-transparent bg-red-100 px-2 py-2 font-medium text-red-700 hover:bg-red-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 dark:bg-red-500 dark:text-white dark:hover:bg-red-700"
+                  class="flex w-full justify-center rounded-md border border-transparent bg-red-500 px-2 py-2 font-medium text-red-700 hover:bg-red-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 dark:bg-red-500 dark:text-white dark:hover:bg-red-700"
                   @click="deleteAllowance(i)"
+                  v-show="form.allowances.length > 1"
                 >
                   <MinusSmallIcon class="h-6 w-6 text-white" />
                 </button>
               </div>
             </div>
+            <p class="mt-4 text-sm font-medium">
+              Total Allowances: {{ '$ ' + Math.round(totalAllowances).toLocaleString() }}
+            </p>
             <div>
               <button
                 type="button"
@@ -144,7 +176,7 @@
         </form>
         <button
           @click="toggleDark = !toggleDark"
-          class="mt-4 w-full rounded-md text-xs text-white hover:text-gray-300"
+          class="mt-4 w-full rounded-md text-xs hover:text-gray-300 dark:text-white"
         >
           Toggle Dark Theme
         </button>
@@ -223,6 +255,16 @@ import { version } from '../package.json'
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
+const salaryForm = {
+  basicSalary: '',
+  allowances: [
+    {
+      allowanceAmount: '',
+      allowanceType: ''
+    }
+  ],
+  companyType: ''
+}
 
 export default {
   components: {
@@ -237,19 +279,13 @@ export default {
   },
   data() {
     return {
-      basicSalary: '',
-      allowances: [
-        {
-          allowanceAmount: '',
-          allowanceType: ''
-        }
-      ],
+      form: salaryForm,
       totalAllowances: '',
       totalTaxableAllowances: '',
       grossSalary: '',
       untaxableIncome: '',
       taxableIncome: '',
-      nisDeduction: '0.056',
+      nisDeduction: '',
       incomeTax: '',
       netIncome: '',
       totalIncome: '',
@@ -261,51 +297,47 @@ export default {
     }
   },
   methods: {
+    // Checks if form is valid
     checkForm: function (e) {
       this.logFormData()
       this.errors = []
-      if (this.fuel != 'Electric' && this.fuel) {
-        if (this.cif && this.exchange_rate && this.age && this.cc && this.fuel) {
-          this.show = !this.show
-          return true
-        }
-        if (!this.cif) {
-          this.errors.push('CIF required.')
-        }
-        if (!this.exchange_rate) {
-          this.errors.push('Exchange Rate required.')
-        }
-        if (!this.age) {
-          this.errors.push('Vehicle Age required.')
-        }
-        if (!this.cc) {
-          this.errors.push('Vehicle CC required.')
-        }
-        if (!this.fuel) {
-          this.errors.push('Vehicle propulsion type required.')
-        }
+      if (this.basicSalary && this.companyType) {
+        this.show = !this.show
+        return true
       } else {
-        if (this.cif && this.exchange_rate && this.age && this.fuel) {
-          this.show = !this.show
-          return true
+        if (!this.basicSalary) {
+          this.errors.push('Please enter your salary.')
         }
-        if (!this.cif) {
-          this.errors.push('CIF required.')
-        }
-        if (!this.exchange_rate) {
-          this.errors.push('Exchange Rate required.')
-        }
-        if (!this.age) {
-          this.errors.push('Vehicle Age required.')
-        }
-        if (!this.fuel) {
-          this.errors.push('Vehicle propulsion type required.')
+        if (!this.companyType) {
+          this.errors.push('Please select your company type.')
         }
       }
       e.preventDefault()
     },
     // Main tax calculation function
-    calculateTax() {},
+    calculateTax() {
+      this.calculateAllowances()
+      // Calculate untaxable income
+      if (this.form.basicSalary > 85000 && this.form.basicSalary <= 195000) {
+        this.untaxableIncome = 85000
+      } else if (this.form.basicSalary < 85000) {
+        this.untaxableIncome = this.form.basicSalary
+      } else {
+        this.untaxableIncome = this.form.basicSalary * 0.3333333333333333
+      }
+      // Calculate NIS
+      if (this.form.basicSalary < 256800) {
+        this.nisDeduction = this.form.basicSalary * 0.056
+      } else {
+        this.nisDeduction = 256800 * 0.056
+      }
+      // Calculate taxable income
+      if (this.form.basicSalary > 85000) {
+        this.taxableIncome = this.form.basicSalary - (this.untaxableIncome + this.nisDeduction)
+      } else {
+        this.taxableIncome = 0
+      }
+    },
     // Resets all form values
     reset() {
       this.basic_salary = ''
@@ -335,13 +367,42 @@ export default {
       console.log('Form Data:', formValues)
     },
     addAllowance() {
-      this.allowances.push({
+      this.form.allowances.push({
         allowance_amount: '',
         allowance_type: ''
       })
     },
     deleteAllowance(index) {
-      this.allowances.splice(index, 1)
+      this.form.allowances.splice(index, 1)
+    },
+    calculateAllowances() {
+      let totalAllowances = 0
+      let totalTaxableAllowances = 0
+      for (let i = 0; i < this.allowances.length; i++) {
+        totalAllowances += parseInt(this.allowances[i].allowanceAmount)
+        if (this.companyType == 'NGO') {
+          if (
+            this.allowances[i].allowanceType === 'Duty' ||
+            this.allowances[i].allowanceType === 'Gratuity' ||
+            this.allowances[i].allowanceType === 'Housing' ||
+            this.allowances[i].allowanceType === 'Medical/Dental' ||
+            this.allowances[i].allowanceType === 'Uniform'
+          ) {
+            totalTaxableAllowances += parseInt(this.allowances[i].allowanceAmount)
+          }
+        } else {
+          // Private and Public companies
+          if (
+            this.allowances[i].allowanceType === 'Duty' ||
+            this.allowances[i].allowanceType === 'Housing' ||
+            this.allowances[i].allowanceType === 'Uniform'
+          ) {
+            totalTaxableAllowances += parseInt(this.allowances[i].allowanceAmount)
+          }
+        }
+      }
+      this.totalAllowances = totalAllowances
+      this.totalTaxableAllowances = totalTaxableAllowances
     }
   }
 }
