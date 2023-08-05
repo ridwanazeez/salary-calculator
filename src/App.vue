@@ -60,7 +60,7 @@
                   </div>
                   <input
                     id="basicSalary"
-                    v-model="basicSalary"
+                    v-model="form.basicSalary"
                     type="number"
                     name="basicSalary"
                     placeholder="100000"
@@ -111,6 +111,7 @@
                     name="allowanceAmount"
                     placeholder="100000"
                     class="mt-1 block w-full rounded-md border-gray-300 pl-7 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                    @change="calculateAllowances()"
                   />
                 </div>
               </div>
@@ -160,16 +161,16 @@
                 </button>
               </div>
             </div>
-            <p class="mt-4 text-sm font-medium">
+            <p class="mt-4 text-sm font-medium dark:text-white">
               Total Allowances: {{ '$ ' + Math.round(totalAllowances).toLocaleString() }}
             </p>
             <div>
               <button
                 type="button"
                 class="group relative flex w-full justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 font-medium text-green-700 hover:bg-green-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 dark:bg-green-500 dark:text-white dark:hover:bg-green-700"
-                @click="logFormData()"
+                @click="logFormData() && calculateTax()"
               >
-                Calculate Duty
+                Calculate Salary
               </button>
             </div>
           </div>
@@ -280,15 +281,15 @@ export default {
   data() {
     return {
       form: salaryForm,
-      totalAllowances: '',
-      totalTaxableAllowances: '',
-      grossSalary: '',
-      untaxableIncome: '',
-      taxableIncome: '',
-      nisDeduction: '',
-      incomeTax: '',
-      netIncome: '',
-      totalIncome: '',
+      totalAllowances: 0,
+      totalTaxableAllowances: 0,
+      grossSalary: 0,
+      untaxableIncome: 0,
+      taxableIncome: 0,
+      nisDeduction: 0,
+      incomeTax: 0,
+      netIncome: 0,
+      totalIncome: 0,
       show: false,
       version: version,
       isDark,
@@ -368,41 +369,38 @@ export default {
     },
     addAllowance() {
       this.form.allowances.push({
-        allowance_amount: '',
-        allowance_type: ''
+        allowanceAmount: '',
+        allowanceType: ''
       })
     },
     deleteAllowance(index) {
       this.form.allowances.splice(index, 1)
     },
     calculateAllowances() {
-      let totalAllowances = 0
-      let totalTaxableAllowances = 0
-      for (let i = 0; i < this.allowances.length; i++) {
-        totalAllowances += parseInt(this.allowances[i].allowanceAmount)
+      console.log(this.form.allowances)
+      for (let i = 0; i < this.form.allowances.length; i++) {
+        this.totalAllowances += parseInt(this.form.allowances[i].allowanceAmount)
         if (this.companyType == 'NGO') {
           if (
-            this.allowances[i].allowanceType === 'Duty' ||
-            this.allowances[i].allowanceType === 'Gratuity' ||
-            this.allowances[i].allowanceType === 'Housing' ||
-            this.allowances[i].allowanceType === 'Medical/Dental' ||
-            this.allowances[i].allowanceType === 'Uniform'
+            this.form.allowances[i].allowanceType === 'Duty' ||
+            this.form.allowances[i].allowanceType === 'Gratuity' ||
+            this.form.allowances[i].allowanceType === 'Housing' ||
+            this.form.allowances[i].allowanceType === 'Medical/Dental' ||
+            this.form.allowances[i].allowanceType === 'Uniform'
           ) {
-            totalTaxableAllowances += parseInt(this.allowances[i].allowanceAmount)
+            this.totalTaxableAllowances += parseInt(this.form.allowances[i].allowanceAmount)
           }
         } else {
           // Private and Public companies
           if (
-            this.allowances[i].allowanceType === 'Duty' ||
-            this.allowances[i].allowanceType === 'Housing' ||
-            this.allowances[i].allowanceType === 'Uniform'
+            this.form.allowances[i].allowanceType === 'Duty' ||
+            this.form.allowances[i].allowanceType === 'Housing' ||
+            this.form.allowances[i].allowanceType === 'Uniform'
           ) {
-            totalTaxableAllowances += parseInt(this.allowances[i].allowanceAmount)
+            this.totalTaxableAllowances += parseInt(this.form.allowances[i].allowanceAmount)
           }
         }
       }
-      this.totalAllowances = totalAllowances
-      this.totalTaxableAllowances = totalTaxableAllowances
     }
   }
 }
