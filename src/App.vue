@@ -5,7 +5,7 @@
         class="mx-auto w-auto bg-cover bg-center [height:250px] md:rounded-t-xl"
         style="background-image: url(/images/screaming.webp)"
         role="img"
-        aria-label="Drawing of a person screaming and pulling their hair out"
+        aria-label="A stick figure screaming and pulling their hair out"
       ></div>
       <div class="px-10 py-10">
         <form class="w-full max-w-md space-y-8" @submit.prevent="checkForm">
@@ -29,6 +29,7 @@
               <a
                 href="https://www.gra.gov.gy/quick-links/calculators/income-tax-calculator/"
                 class="underline"
+                target="_blank"
               >
                 official calculator
               </a>
@@ -79,7 +80,7 @@
                   id="companyType"
                   v-model="form.companyType"
                   name="companyType"
-                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
                 >
                   <option value="" disabled selected>Choose Company Type</option>
                   <option value="Private">Private</option>
@@ -111,7 +112,7 @@
                     name="allowanceAmount"
                     placeholder="100000"
                     class="mt-1 block w-full rounded-md border-gray-300 pl-7 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                    @change="calculateAllowances()"
+                    @change="sumAllowances()"
                   />
                 </div>
               </div>
@@ -126,7 +127,8 @@
                   id="allowanceType"
                   v-model="allowance.allowanceType"
                   name="allowanceType"
-                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+                  @change="calculateAllowances()"
                 >
                   <option value="" disabled selected>Choose Allowance Type</option>
                   <option value="Duty">Duty</option>
@@ -223,12 +225,15 @@
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <DialogPanel
-              class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+              class="relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
             >
-              <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                <div class="">
+              <div class="bg-white px-4 pb-4 pt-5 dark:bg-gray-900 dark:text-white sm:p-6 sm:pb-4">
+                <div>
                   <div class="mt-3 sm:mt-0">
-                    <DialogTitle as="h3" class="pb-3 text-center text-xl font-bold text-gray-900">
+                    <DialogTitle
+                      as="h3"
+                      class="pb-3 text-center text-xl font-bold text-gray-900 dark:text-white"
+                    >
                       Results
                     </DialogTitle>
                     <table class="w-full table-auto">
@@ -247,11 +252,63 @@
                         </td>
                       </tr>
                       <tr>
-                        <th class="text-left text-sm" colspan="2">Allowances Breakdown:</th>
+                        <th class="text-left text-sm" colspan="2">Allowances:</th>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td></td>
                       </tr>
                       <tr v-for="(allowance, i) in form.allowances" :key="i">
+                        <td class="text-center text-sm">{{ i + 1 }}</td>
+                        <td class="text-left text-sm">
+                          {{ allowance.allowanceType }}
+                        </td>
+                        <td></td>
+                        <td class="text-right text-sm">
+                          {{
+                            '$ ' + Math.round(allowance.allowanceAmount).toLocaleString() + ' '
+                          }}GYD
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="text-left" colspan="2">Total Taxable Allowances:</th>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td class="text-right">
+                          {{
+                            '$ ' + Math.round(this.totalTaxableAllowances).toLocaleString() + ' '
+                          }}GYD
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="text-left text-sm" colspan="2">Taxable Allowances:</th>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td></td>
+                      </tr>
+                      <tr v-for="(allowance, i) in taxableAllowances" :key="i">
+                        <td class="text-center text-sm">{{ i + 1 }}</td>
+                        <td class="text-left text-sm">
+                          {{ allowance.allowanceType }}
+                        </td>
+                        <td></td>
+                        <td class="text-right text-sm">
+                          {{
+                            '$ ' + Math.round(allowance.allowanceAmount).toLocaleString() + ' '
+                          }}GYD
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="text-left" colspan="2">Total Untaxable Allowances:</th>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td class="text-right">
+                          {{
+                            '$ ' + Math.round(this.totalUntaxableAllowances).toLocaleString() + ' '
+                          }}GYD
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="text-left text-sm" colspan="2">Untaxable Allowances:</th>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td></td>
+                      </tr>
+                      <tr v-for="(allowance, i) in untaxableAllowances" :key="i">
                         <td class="text-center text-sm">{{ i + 1 }}</td>
                         <td class="text-left text-sm">
                           {{ allowance.allowanceType }}
@@ -271,15 +328,6 @@
                         </td>
                       </tr>
                       <tr>
-                        <th class="text-left" colspan="2">Total Taxable Allowances:</th>
-                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                        <td class="text-right">
-                          {{
-                            '$ ' + Math.round(this.totalTaxableAllowances).toLocaleString() + ' '
-                          }}GYD
-                        </td>
-                      </tr>
-                      <tr>
                         <th class="text-left font-bold" colspan="2">Total Monthly Income</th>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td class="text-right font-bold">
@@ -290,7 +338,9 @@
                   </div>
                 </div>
               </div>
-              <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+              <div
+                class="bg-gray-50 px-4 py-3 dark:bg-gray-800 sm:flex sm:flex-row-reverse sm:px-6"
+              >
                 <button
                   type="button"
                   class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
@@ -342,6 +392,7 @@ export default {
       form: salaryForm,
       totalAllowances: 0,
       totalTaxableAllowances: 0,
+      totalUntaxableAllowances: 0,
       grossSalary: 0,
       untaxableIncome: 0,
       taxableIncome: 0,
@@ -351,6 +402,8 @@ export default {
       totalIncome: 0,
       taxThreshold1: 0,
       taxThreshold2: 0,
+      taxableAllowances: [],
+      untaxableAllowances: [],
       show: false,
       version: version,
       isDark,
@@ -434,14 +487,12 @@ export default {
       // Calculate net income
       this.netIncome = this.form.basicSalary - (this.nisDeduction + this.incomeTax)
       // Calculate total income
-      this.totalIncome = this.netIncome + (this.totalAllowances - this.totalTaxableAllowances)
+      this.totalIncome = this.netIncome + this.totalUntaxableAllowances
     },
     calculateAllowances() {
       // Reset allowances to 0 to prevent double counting
-      this.totalAllowances = 0
       this.totalTaxableAllowances = 0
       for (let i = 0; i < this.form.allowances.length; i++) {
-        this.totalAllowances += parseInt(this.form.allowances[i].allowanceAmount)
         if (this.companyType == 'NGO') {
           if (
             this.form.allowances[i].allowanceType === 'Duty' ||
@@ -451,6 +502,11 @@ export default {
             this.form.allowances[i].allowanceType === 'Uniform'
           ) {
             this.totalTaxableAllowances += parseInt(this.form.allowances[i].allowanceAmount)
+            this.totalUntaxableAllowances = this.totalAllowances - this.totalTaxableAllowances
+            this.taxableAllowances.push({
+              allowanceAmount: parseInt(this.form.allowances[i].allowanceAmount),
+              allowanceType: this.form.allowances[i].allowanceType
+            })
           }
         } else {
           // Private and Public companies
@@ -460,8 +516,20 @@ export default {
             this.form.allowances[i].allowanceType === 'Uniform'
           ) {
             this.totalTaxableAllowances += parseInt(this.form.allowances[i].allowanceAmount)
+            this.totalUntaxableAllowances = this.totalAllowances - this.totalTaxableAllowances
+            this.taxableAllowances.push({
+              allowanceAmount: parseInt(this.form.allowances[i].allowanceAmount),
+              allowanceType: this.form.allowances[i].allowanceType
+            })
           }
         }
+      }
+      console.log('allowances: ', this.taxableAllowances)
+    },
+    sumAllowances() {
+      this.totalAllowances = 0
+      for (let i = 0; i < this.form.allowances.length; i++) {
+        this.totalAllowances += parseInt(this.form.allowances[i].allowanceAmount)
       }
     },
     // Resets all values
