@@ -14,13 +14,13 @@
               Salary Calculator
             </h2>
             <p class="text-center text-sm dark:text-white">
-              v{{ version }} | Last updated: 05/08/2023 | Click
+              v{{ version }} | Last updated: 07/11/2023 | Click
               <a
                 href="https://ridwanazeez.notion.site/Salary-Calculator-Update-Notes-ad551e6f8c18465e8fed5517616b0184?pvs=4"
                 class="underline"
               >
-                here
-              </a>
+                here</a
+              >
               to see what's new
             </p>
             <p class="mt-4 text-center font-medium text-gray-500 dark:text-white">
@@ -30,9 +30,8 @@
                 href="https://www.gra.gov.gy/quick-links/calculators/income-tax-calculator/"
                 class="underline"
                 target="_blank"
+                >official calculator</a
               >
-                official calculator
-              </a>
               from the GRA and there may be some inaccuracies. Trust the figures here at your own
               risk.
               <br />
@@ -190,7 +189,7 @@
           </div>
         </form>
         <button
-          @click="toggleDark = !toggleDark"
+          @click="toggleDark()"
           class="mt-4 w-full rounded-md text-xs hover:text-gray-300 dark:text-white"
         >
           Toggle Dark Theme
@@ -252,6 +251,13 @@
                         </td>
                       </tr>
                       <tr>
+                        <th class="text-left" colspan="2">Gross Salary</th>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td class="text-right">
+                          {{ '$ ' + Math.round(this.grossSalary).toLocaleString() + ' ' }}GYD
+                        </td>
+                      </tr>
+                      <!-- <tr>
                         <th class="text-left text-sm" colspan="2">Allowances:</th>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td></td>
@@ -265,15 +271,6 @@
                         <td class="text-right text-sm">
                           {{
                             '$ ' + Math.round(allowance.allowanceAmount).toLocaleString() + ' '
-                          }}GYD
-                        </td>
-                      </tr>
-                      <tr>
-                        <th class="text-left" colspan="2">Total Taxable Allowances:</th>
-                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                        <td class="text-right">
-                          {{
-                            '$ ' + Math.round(this.totalTaxableAllowances).toLocaleString() + ' '
                           }}GYD
                         </td>
                       </tr>
@@ -293,17 +290,17 @@
                             '$ ' + Math.round(allowance.allowanceAmount).toLocaleString() + ' '
                           }}GYD
                         </td>
-                      </tr>
+                      </tr> -->
                       <tr>
-                        <th class="text-left" colspan="2">Total Untaxable Allowances:</th>
+                        <th class="text-left" colspan="2">Total Taxable Allowances:</th>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td class="text-right">
                           {{
-                            '$ ' + Math.round(this.totalUntaxableAllowances).toLocaleString() + ' '
+                            '$ ' + Math.round(this.totalTaxableAllowances).toLocaleString() + ' '
                           }}GYD
                         </td>
                       </tr>
-                      <tr>
+                      <!-- <tr>
                         <th class="text-left text-sm" colspan="2">Untaxable Allowances:</th>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td></td>
@@ -319,18 +316,20 @@
                             '$ ' + Math.round(allowance.allowanceAmount).toLocaleString() + ' '
                           }}GYD
                         </td>
-                      </tr>
+                      </tr> -->
                       <tr>
-                        <th class="text-left" colspan="2">Gross Salary</th>
+                        <th class="text-left" colspan="2">Total Untaxable Allowances:</th>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td class="text-right">
-                          {{ '$ ' + Math.round(this.grossSalary).toLocaleString() + ' ' }}GYD
+                          {{
+                            '$ ' + Math.round(this.totalUntaxableAllowances).toLocaleString() + ' '
+                          }}GYD
                         </td>
                       </tr>
-                      <tr>
-                        <th class="text-left font-bold" colspan="2">Total Monthly Income</th>
-                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                        <td class="text-right font-bold">
+                      <tr class="">
+                        <th class="pt-2 text-left font-bold" colspan="2">Total Monthly Income</th>
+                        <td class="pt-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td class="pt-2 text-right font-bold">
                           {{ '$ ' + Math.round(this.totalIncome).toLocaleString() + ' ' }}GYD
                         </td>
                       </tr>
@@ -364,7 +363,6 @@ import { useDark, useToggle } from '@vueuse/core'
 import { version } from '../package.json'
 
 const isDark = useDark()
-const toggleDark = useToggle(isDark)
 const salaryForm = {
   basicSalary: '',
   allowances: [
@@ -407,8 +405,12 @@ export default {
       show: false,
       version: version,
       isDark,
-      toggleDark,
       errors: []
+    }
+  },
+  computed: {
+    toggleDark() {
+      return useToggle(this.isDark)
     }
   },
   methods: {
@@ -427,7 +429,7 @@ export default {
         if (!this.form.basicSalary) {
           this.errors.push('Please enter your salary')
         }
-        if (!this.form.basicSalary) {
+        if (!this.form.companyType) {
           this.errors.push('Please pick your company type')
         }
         for (let i = 0; i < this.form.allowances.length; i++) {
@@ -437,7 +439,6 @@ export default {
         }
       }
       e.preventDefault()
-      console.log(this.form)
     },
     addAllowance() {
       this.form.allowances.push({
@@ -524,7 +525,6 @@ export default {
           }
         }
       }
-      console.log('allowances: ', this.taxableAllowances)
     },
     sumAllowances() {
       this.totalAllowances = 0
@@ -569,7 +569,6 @@ export default {
         'Net Income: ': this.netIncome,
         'Total Income: ': this.totalIncome
       })
-      console.log('Form Data:', formValues)
     }
   }
 }
