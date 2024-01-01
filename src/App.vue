@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center sm:px-6 md:px-4 md:py-12 lg:px-8">
+  <div class="flex h-screen items-center justify-center sm:px-6 md:px-4 md:py-12 lg:px-8">
     <div>
       <div
         class="mx-auto w-auto bg-cover bg-center [height:250px] md:rounded-t-xl"
@@ -14,10 +14,11 @@
               Salary Calculator
             </h2>
             <p class="text-center text-sm dark:text-white">
-              v{{ version }} | Last updated: 07/11/2023 | Click
+              v{{ version }} | Last updated: 01/01/2024 | Click
               <a
-                href="https://ridwanazeez.notion.site/Salary-Calculator-Update-Notes-ad551e6f8c18465e8fed5517616b0184?pvs=4"
+                href="https://ridwanazeez.notion.site/Salary-Calculator-Update-Notes-ad551e6f8c18465e8fed5517616b0184"
                 class="underline"
+                target="_blank"
               >
                 here</a
               >
@@ -139,7 +140,7 @@
             <DialogPanel
               class="relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
             >
-              <div class="bg-white px-4 pb-4 pt-5 dark:bg-gray-900 dark:text-white sm:p-6 sm:pb-4">
+              <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-gray-900 dark:text-white">
                 <div>
                   <div class="mt-3 sm:mt-0">
                     <DialogTitle
@@ -182,7 +183,7 @@
                 </div>
               </div>
               <div
-                class="bg-gray-50 px-4 py-3 dark:bg-gray-800 sm:flex sm:flex-row-reverse sm:px-6"
+                class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 dark:bg-gray-800"
               >
                 <button
                   type="button"
