@@ -255,6 +255,7 @@ import { useDark, useToggle } from '@vueuse/core'
 import { version } from '../package.json'
 
 const isDark = useDark()
+const toggleDark = useToggle(isDark)
 const salaryForm = {
   basicSalary: '',
   allowances: ''
@@ -286,14 +287,11 @@ export default {
       version: version,
       isDark,
       newThreshold: false,
+      toggleDark,
       errors: []
     }
   },
-  computed: {
-    toggleDark() {
-      return useToggle(this.isDark)
-    }
-  },
+  computed: {},
   methods: {
     // Checks if form is valid
     checkForm(e) {
