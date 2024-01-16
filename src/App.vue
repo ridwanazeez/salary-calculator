@@ -122,12 +122,19 @@
             </div>
           </div>
         </form>
-        <button
-          @click="toggleDark()"
-          class="mt-4 w-full rounded-md text-xs hover:text-gray-300 dark:text-white"
-        >
-          Toggle Dark Theme
-        </button>
+        <div class="mt-6 space-y-6">
+          <button
+            @click="toggleDark()"
+            class="w-full rounded-md text-xs hover:text-gray-300 dark:text-white"
+          >
+            Toggle Dark Theme
+          </button>
+          <p class="text-center font-medium text-gray-300">
+            Made with ♥ by
+            <a href="https://ridwanazeez.github.io/" class="underline" target="_blank">me</a>
+            <br />
+          </p>
+        </div>
       </div>
     </div>
   </div>
