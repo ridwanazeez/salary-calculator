@@ -14,7 +14,7 @@
               Salary Calculator
             </h2>
             <p class="text-center text-sm dark:text-white">
-              v{{ version }} | Last updated: 15/01/2024 | Click
+              v{{ version }} | Last updated: 16/01/2024 | Click
               <a
                 href="https://ridwanazeez.notion.site/Salary-Calculator-Update-Notes-ad551e6f8c18465e8fed5517616b0184"
                 class="underline"
@@ -93,7 +93,7 @@
             </div>
             <div class="grid grid-cols-6 gap-6">
               <div class="col-span-6 sm:col-span-3">
-                <label class="relative flex gap-x-3" @click="toggleThreshold()">
+                <label class="relative flex gap-x-2" @click="toggleThreshold()">
                   <div class="flex h-6 items-center">
                     <input
                       id="newThreshold"
@@ -122,12 +122,20 @@
             </div>
           </div>
         </form>
-        <button
-          @click="toggleDark()"
-          class="mt-4 w-full rounded-md text-xs hover:text-gray-300 dark:text-white"
-        >
-          Toggle Dark Theme
-        </button>
+        <div class="mt-6 space-y-6">
+          <button
+            @click="toggleDark()"
+            type="button"
+            class="w-full rounded-md text-gray-300 hover:text-gray-700 dark:text-white"
+          >
+            Toggle Dark Theme
+          </button>
+          <p class="text-center font-medium text-gray-300">
+            Made with ♥ by
+            <a href="https://ridwanazeez.github.io/" class="underline" target="_blank">me</a>
+            <br />
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -212,7 +220,14 @@
                           {{ '$ ' + Math.round(this.taxableIncome).toLocaleString() + ' ' }}GYD
                         </td>
                       </tr>
-                      <tr class="">
+                      <tr>
+                        <th class="text-left" colspan="2">NIS Deduction</th>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td class="text-right">
+                          {{ '$ ' + Math.round(this.nisDeduction).toLocaleString() + ' ' }}GYD
+                        </td>
+                      </tr>
+                      <tr>
                         <th class="pt-2 text-left font-bold" colspan="2">Total Monthly Income</th>
                         <td class="pt-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td class="pt-2 text-right font-bold">
@@ -248,6 +263,7 @@ import { useDark, useToggle } from '@vueuse/core'
 import { version } from '../package.json'
 
 const isDark = useDark()
+const toggleDark = useToggle(isDark)
 const salaryForm = {
   basicSalary: '',
   allowances: ''
@@ -279,27 +295,21 @@ export default {
       version: version,
       isDark,
       newThreshold: false,
+      toggleDark,
       errors: []
     }
   },
-  computed: {
-    toggleDark() {
-      return useToggle(this.isDark)
-    }
-  },
+  computed: {},
   methods: {
     // Checks if form is valid
     checkForm(e) {
       this.errors = []
-      if (this.form.basicSalary && this.form.allowances) {
+      if (this.form.basicSalary) {
         this.show = !this.show
         return true
       } else {
         if (!this.form.basicSalary) {
           this.errors.push('Please enter your salary')
-        }
-        if (!this.form.allowances) {
-          this.errors.push('Please enter your total allowances')
         }
       }
       e.preventDefault()
