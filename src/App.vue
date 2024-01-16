@@ -93,7 +93,7 @@
             </div>
             <div class="grid grid-cols-6 gap-6">
               <div class="col-span-6 sm:col-span-3">
-                <label class="relative flex gap-x-3" @click="toggleThreshold()">
+                <label class="relative flex gap-x-2" @click="toggleThreshold()">
                   <div class="flex h-6 items-center">
                     <input
                       id="newThreshold"
@@ -125,7 +125,8 @@
         <div class="mt-6 space-y-6">
           <button
             @click="toggleDark()"
-            class="w-full rounded-md text-xs hover:text-gray-300 dark:text-white"
+            type="button"
+            class="w-full rounded-md text-gray-300 hover:text-gray-700 dark:text-white"
           >
             Toggle Dark Theme
           </button>
@@ -219,7 +220,14 @@
                           {{ '$ ' + Math.round(this.taxableIncome).toLocaleString() + ' ' }}GYD
                         </td>
                       </tr>
-                      <tr class="">
+                      <tr>
+                        <th class="text-left" colspan="2">NIS Deduction</th>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td class="text-right">
+                          {{ '$ ' + Math.round(this.nisDeduction).toLocaleString() + ' ' }}GYD
+                        </td>
+                      </tr>
+                      <tr>
                         <th class="pt-2 text-left font-bold" colspan="2">Total Monthly Income</th>
                         <td class="pt-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td class="pt-2 text-right font-bold">
@@ -296,15 +304,12 @@ export default {
     // Checks if form is valid
     checkForm(e) {
       this.errors = []
-      if (this.form.basicSalary && this.form.allowances) {
+      if (this.form.basicSalary) {
         this.show = !this.show
         return true
       } else {
         if (!this.form.basicSalary) {
           this.errors.push('Please enter your salary')
-        }
-        if (!this.form.allowances) {
-          this.errors.push('Please enter your total allowances')
         }
       }
       e.preventDefault()
