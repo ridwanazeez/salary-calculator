@@ -14,7 +14,7 @@
               Salary Calculator
             </h2>
             <p class="text-center text-sm dark:text-white">
-              v{{ version }} | Last updated: 01/01/2024 | Click
+              v{{ version }} | Last updated: 15/01/2024 | Click
               <a
                 href="https://ridwanazeez.notion.site/Salary-Calculator-Update-Notes-ad551e6f8c18465e8fed5517616b0184"
                 class="underline"
@@ -91,6 +91,26 @@
                 </div>
               </div>
             </div>
+            <div class="grid grid-cols-6 gap-6">
+              <div class="col-span-6 sm:col-span-3">
+                <label class="relative flex gap-x-3" @click="toggleThreshold()">
+                  <div class="flex h-6 items-center">
+                    <input
+                      id="newThreshold"
+                      name="newThreshold"
+                      type="checkbox"
+                      v-model="newThreshold"
+                      class="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-600"
+                    />
+                  </div>
+                  <div class="text-sm leading-6">
+                    <label for="newThreshold" class="font-medium text-gray-900"
+                      >New Threshold</label
+                    >
+                  </div>
+                </label>
+              </div>
+            </div>
             <div>
               <button
                 type="submit"
@@ -140,7 +160,7 @@
             <DialogPanel
               class="relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
             >
-              <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-gray-900 dark:text-white">
+              <div class="bg-white px-4 pb-4 pt-5 dark:bg-gray-900 dark:text-white sm:p-6 sm:pb-4">
                 <div>
                   <div class="mt-3 sm:mt-0">
                     <DialogTitle
@@ -171,6 +191,27 @@
                           {{ '$ ' + Math.round(this.grossSalary).toLocaleString() + ' ' }}GYD
                         </td>
                       </tr>
+                      <tr>
+                        <th class="text-left" colspan="2">Tax Threshold</th>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td class="text-right">
+                          {{ '$ ' + Math.round(this.taxThreshold).toLocaleString() + ' ' }}GYD
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="text-left" colspan="2">Untaxable Income</th>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td class="text-right">
+                          {{ '$ ' + Math.round(this.untaxableIncome).toLocaleString() + ' ' }}GYD
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="text-left" colspan="2">Taxable Income</th>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td class="text-right">
+                          {{ '$ ' + Math.round(this.taxableIncome).toLocaleString() + ' ' }}GYD
+                        </td>
+                      </tr>
                       <tr class="">
                         <th class="pt-2 text-left font-bold" colspan="2">Total Monthly Income</th>
                         <td class="pt-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -183,7 +224,7 @@
                 </div>
               </div>
               <div
-                class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 dark:bg-gray-800"
+                class="bg-gray-50 px-4 py-3 dark:bg-gray-800 sm:flex sm:flex-row-reverse sm:px-6"
               >
                 <button
                   type="button"
@@ -231,11 +272,13 @@ export default {
       incomeTax: 0,
       netIncome: 0,
       totalIncome: 0,
+      taxThreshold: 85000,
       taxThreshold1: 0,
       taxThreshold2: 0,
       show: false,
       version: version,
       isDark,
+      newThreshold: false,
       errors: []
     }
   },
@@ -264,9 +307,9 @@ export default {
     // Main tax calculation function
     calculateTax() {
       // Calculate untaxable income
-      if (this.form.basicSalary > 85000 && this.form.basicSalary <= 195000) {
-        this.untaxableIncome = 85000
-      } else if (this.form.basicSalary < 85000) {
+      if (this.form.basicSalary > this.taxThreshold && this.form.basicSalary <= 195000) {
+        this.untaxableIncome = this.taxThreshold
+      } else if (this.form.basicSalary < this.taxThreshold) {
         this.untaxableIncome = this.form.basicSalary
       } else {
         this.untaxableIncome = this.form.basicSalary * 0.3333333333333333
@@ -278,7 +321,7 @@ export default {
         this.nisDeduction = 256800 * 0.056
       }
       // Calculate taxable income
-      if (this.form.basicSalary > 85000) {
+      if (this.form.basicSalary > this.taxThreshold) {
         this.taxableIncome = this.form.basicSalary - (this.untaxableIncome + this.nisDeduction)
       } else {
         this.taxableIncome = 0
@@ -301,6 +344,13 @@ export default {
       this.netIncome = this.form.basicSalary - (this.nisDeduction + this.incomeTax)
       // Calculate total income
       this.totalIncome = this.netIncome + this.form.allowances
+    },
+    toggleThreshold() {
+      if (this.newThreshold) {
+        this.taxThreshold = 85000
+      } else {
+        this.taxThreshold = 100000
+      }
     },
     // Resets all values
     reset() {
@@ -329,6 +379,7 @@ export default {
         'Net Income: ': this.netIncome,
         'Total Income: ': this.totalIncome
       })
+      console.log('Form Data:', formValues)
     }
   }
 }
