@@ -104,7 +104,7 @@
                     />
                   </div>
                   <div class="text-sm leading-6">
-                    <label for="newThreshold" class="font-medium text-gray-900"
+                    <label for="newThreshold" class="font-medium text-gray-900 dark:text-white"
                       >New Threshold</label
                     >
                   </div>
