@@ -14,7 +14,7 @@
               Salary Calculator
             </h2>
             <p class="text-center text-sm dark:text-white">
-              v{{ version }} | Last updated: 16/01/2024 | Click
+              v{{ version }} | Last updated: 19/01/2024 | Click
               <a
                 href="https://ridwanazeez.notion.site/Salary-Calculator-Update-Notes-ad551e6f8c18465e8fed5517616b0184"
                 class="underline"
